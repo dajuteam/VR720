@@ -11,6 +11,40 @@
             margin: 0;
         
         }
+        .highlight {
+            background-color: yellow;
+        }
+        .search{
+            text-align: center;
+        }
+        #searchInput {
+            width: 200px; /* 搜尋框寬度 */
+            height: 30px; /* 搜尋框高度 */
+            margin-bottom: 10px;
+            font-size: 16px; /* 文字大小 */
+            padding: 5px 10px; /* 內距 (padding) */
+            border-radius: 5px; /* 圓角邊框 */
+            border: 2px solid #ccc; /* 邊框顏色和寬度 */
+        }
+
+        /* 調整按鈕的大小 */
+        button {
+            width: 100px; /* 按鈕寬度 */
+            height: 40px; /* 按鈕高度 */
+            font-size: 16px; /* 文字大小 */
+            padding: 5px 10px; /* 內距 (padding) */
+            margin-left: 10px; /* 與搜尋框之間的距離 */
+            border-radius: 5px; /* 圓角邊框 */
+            background-color: #4CAF50; /* 背景顏色 */
+            color: white; /* 文字顏色 */
+            border: none; /* 移除邊框 */
+            cursor: pointer; /* 指標變成手勢 */
+        }
+
+        /* 按鈕滑過效果 */
+        button:hover {
+            background-color: #45a049; /* 滑過時的顏色 */
+        }
         .container{   
             box-sizing: border-box;
             width: 100%;
@@ -71,6 +105,30 @@
    
         }
 
+
+        #backToTopBtn {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            width: 50px;
+            height: 50px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 50%;
+            font-size: 24px;
+            cursor: pointer;
+            display: none; /* 預設不顯示，當滾動時才顯示 */
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+
+        /* 滑鼠移過時改變按鈕背景顏色 */
+        #backToTopBtn:hover {
+            background-color: #45a049;
+        }
+
         @media screen and (min-width: 992px) {
 
             .container{   
@@ -117,7 +175,12 @@
 </head>
 
 <body>
-    <div class="container">
+    <div class="search">
+        <input type="text" id="searchInput" placeholder="輸入搜尋字詞">
+        <button onclick="searchKeyword()">搜尋</button>
+</div>
+    <div class="container" id="content">
+       
         <div class="button">
             <a href="https://www.qwhouse720.com/tour/f3ed42f905a91c5a" class="button-link" target="_blank">
                 <span class="button-number">1</span>華固頂滙
@@ -449,6 +512,71 @@
             </a>
         </div>
     </div>
+    <button id="backToTopBtn" onclick="scrollToTop()">&#8679;</button>
+    <script>
+        // 綁定鍵盤事件
+        document.getElementById('searchInput').addEventListener('keydown', function(event) {
+            if (event.key === 'Enter') {
+                event.preventDefault();  // 防止表單提交或其他默認行為
+                searchKeyword();
+            }
+        });
+
+        function searchKeyword() {
+            var keyword = document.getElementById('searchInput').value;
+
+            // 清除之前的高亮標記
+            var highlighted = document.querySelectorAll('.highlight');
+            highlighted.forEach(function(el) {
+                el.classList.remove('highlight');
+            });
+
+            // 如果關鍵字是空的，不做搜尋
+            if (keyword === '') {
+                return;
+            }
+
+            // 搜尋頁面中的文字並標記符合的部分
+            var content = document.getElementById('content').innerHTML;
+            var regex = new RegExp(`(${keyword})`, 'gi');
+            var newText = content.replace(regex, '<span class="highlight">$1</span>');
+            document.getElementById('content').innerHTML = newText;
+
+            // 自動滾動到第一個搜尋結果
+            var firstMatch = document.querySelector('.highlight');
+            if (firstMatch) {
+                firstMatch.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            } else {
+                alert("找不到相關關鍵字");
+            }
+        }
+
+
+
+// 按鈕語法
+
+
+window.onscroll = function() {
+            scrollFunction();
+        };
+
+        function scrollFunction() {
+            var backToTopBtn = document.getElementById("backToTopBtn");
+            if (document.body.scrollTop > 100 || document.documentElement.scrollTop > 100) {
+                backToTopBtn.style.display = "flex"; // 顯示按鈕
+            } else {
+                backToTopBtn.style.display = "none"; // 隱藏按鈕
+            }
+        }
+
+        // 點擊按鈕，平滑滾動到頁面頂端
+        function scrollToTop() {
+            window.scrollTo({
+                top: 0,
+                behavior: 'smooth' // 平滑滾動效果
+            });
+        }
+    </script>
 </body>
 
 </html>
