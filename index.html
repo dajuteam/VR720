@@ -546,7 +546,70 @@
         </div>
         <button id="backToTopBtn" onclick="scrollToTop()">⇧</button>
         
-    
+       <script>
+        // 綁定鍵盤事件
+        document.getElementById('searchInput').addEventListener('keydown', function(event) {
+            if (event.key === 'Enter') {
+                event.preventDefault();  // 防止表單提交或其他默認行為
+                searchKeyword();
+            }
+        });
+
+        function searchKeyword() {
+            var keyword = document.getElementById('searchInput').value;
+
+            // 清除之前的高亮標記
+            var highlighted = document.querySelectorAll('.highlight');
+            highlighted.forEach(function(el) {
+                el.classList.remove('highlight');
+            });
+
+            // 如果關鍵字是空的，不做搜尋
+            if (keyword === '') {
+                return;
+            }
+
+            // 搜尋頁面中的文字並標記符合的部分
+            var content = document.getElementById('content').innerHTML;
+            var regex = new RegExp(`(${keyword})`, 'gi');
+            var newText = content.replace(regex, '<span class="highlight">$1</span>');
+            document.getElementById('content').innerHTML = newText;
+
+            // 自動滾動到第一個搜尋結果
+            var firstMatch = document.querySelector('.highlight');
+            if (firstMatch) {
+                firstMatch.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            } else {
+                alert("找不到相關關鍵字");
+            }
+        }
+
+
+
+// 按鈕語法
+
+
+window.onscroll = function() {
+            scrollFunction();
+        };
+
+        function scrollFunction() {
+            var backToTopBtn = document.getElementById("backToTopBtn");
+            if (document.body.scrollTop > 100 || document.documentElement.scrollTop > 100) {
+                backToTopBtn.style.display = "flex"; // 顯示按鈕
+            } else {
+                backToTopBtn.style.display = "none"; // 隱藏按鈕
+            }
+        }
+
+        // 點擊按鈕，平滑滾動到頁面頂端
+        function scrollToTop() {
+            window.scrollTo({
+                top: 0,
+                behavior: 'smooth' // 平滑滾動效果
+            });
+        }
+    </script>
     
     
     </body>
